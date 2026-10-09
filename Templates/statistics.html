@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>HR Statistics</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="/static/style.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<div class="container dashboard-container">
+    <div class="dashboard-header">
+        <div>
+            <span class="badge">Analytics</span>
+            <h1>HR Recruitment Statistics</h1>
+        </div>
+        <a href="/hr/dashboard" class="button secondary">Back to Dashboard</a>
+    </div>
+
+    <div class="cards">
+        <div class="card"><h2>{{ total }}</h2><p>Total Candidates</p></div>
+        <div class="card"><h2>{{ selected }}</h2><p>Total Selected</p></div>
+        <div class="card"><h2>{{ pending }}</h2><p>Pending Applications</p></div>
+        <div class="card"><h2>{{ monthly_selected }}</h2><p>Selected This Month</p></div>
+    </div>
+
+    <div class="chart-panel">
+        <h2>Candidate Selection Graph</h2>
+        <canvas id="myChart"></canvas>
+    </div>
+
+    <div class="table-panel">
+        <h2>Candidate Data Table</h2>
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Job</th>
+                <th>Score</th>
+                <th>Status</th>
+                <th>Applied Date</th>
+            </tr>
+            {% for record in records %}
+            <tr>
+                <td>{{ record.name }}</td>
+                <td>{{ record.email }}</td>
+                <td>{{ record.phone }}</td>
+                <td>{{ record.job }}</td>
+                <td>{{ record.score }}%</td>
+                <td>{{ record.status }}</td>
+                <td>{{ record.applied_date }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+    <script>
+    const ctx = document.getElementById('myChart');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: [
+                "Total Candidates",
+                "Selected",
+                "Pending",
+                "Selected This Month"
+            ],
+            datasets: [{
+                label: "Candidates",
+                data: [
+                    {{ total }},
+                    {{ selected }},
+                    {{ pending }},
+                    {{ monthly_selected }}
+                ],
+                backgroundColor: ['#2563eb', '#10b981', '#f59e0b', '#8b5cf6']
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: false }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+    </script>
+</div>
+</body>
+</html>

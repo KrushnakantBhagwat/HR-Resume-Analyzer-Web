@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Apply Job</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<div class="container auth-container">
+    <div class="auth-box wide-box">
+        <h2>Apply For Job</h2>
+        <form method="POST" enctype="multipart/form-data">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <label>Select Job</label>
+            <select name="job">
+                <option>Python Developer</option>
+                <option>Web Developer</option>
+                <option>Data Analyst</option>
+                <option>Software Developer</option>
+            </select>
+
+            <label>Upload Resume</label>
+            <input type="file" name="resume" required>
+
+            <button type="submit">Submit Application</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>

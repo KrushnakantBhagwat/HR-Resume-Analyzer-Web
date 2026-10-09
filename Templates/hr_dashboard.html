@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>HR Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<div class="container dashboard-container">
+    <div class="dashboard-header">
+        <div>
+            <span class="badge">HR Dashboard</span>
+            <h1>Recruitment Overview</h1>
+        </div>
+        <div class="header-actions">
+            <a href="/statistics" class="button">View Statistics</a>
+            <a href="/logout" class="button secondary">Logout</a>
+        </div>
+    </div>
+
+    <form method="POST" action="/hr/rescore" class="rescore-form">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button type="submit" class="button secondary">Recalculate Resume Scores</button>
+        <span class="score-note">Reprocess previously submitted resumes using the current scorer.</span>
+    </form>
+
+    <h2>Candidate Applications</h2>
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Job</th>
+            <th>Resume</th>
+            <th>Automated Resume Match</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+
+        {% for application in applications %}
+        <tr>
+            <td>{{ application.name }}</td>
+            <td>{{ application.email }}</td>
+            <td>{{ application.phone }}</td>
+            <td>{{ application.job }}</td>
+            <td>
+                {% if application.resume %}
+                <a href="/resume/{{ application.resume }}">View Resume</a>
+                {% else %}
+                No Resume
+                {% endif %}
+            </td>
+            <td>
+                {% if application.score is not none %}
+                <span class="score-badge">{{ application.score }}%</span>
+                {% else %}
+                <span class="score-unavailable">Unable to analyze</span>
+                {% endif %}
+            </td>
+            <td>{{ application.status }}</td>
+            <td>
+                {% if application.status == "Pending" %}
+                <form method="POST" action="/hire/{{ application.id }}" class="hire-form">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button type="submit">Hire Candidate</button>
+                </form>
+                {% else %}
+                Selected
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+        {% if not applications %}
+        <tr><td colspan="8" class="empty-state">No candidate applications yet.</td></tr>
+        {% endif %}
+    </table>
+    <p class="score-note">Scores are automated keyword-based estimates, not a hiring decision.</p>
+</div>
+</body>
+</html>

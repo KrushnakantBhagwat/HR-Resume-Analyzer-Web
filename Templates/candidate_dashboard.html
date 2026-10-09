@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Candidate Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<div class="container dashboard-container">
+    <div class="dashboard-header">
+        <div>
+            <span class="badge">Candidate Portal</span>
+            <h1>Candidate Dashboard</h1>
+        </div>
+        <a href="/logout" class="button secondary">Logout</a>
+    </div>
+
+    <div class="profile-card">
+        <h3>Welcome, {{ candidate.name }}</h3>
+        <p><strong>Email:</strong> {{ candidate.email }}</p>
+        <p><strong>Phone:</strong> {{ candidate.phone }}</p>
+        <a href="/candidate/apply" class="button">Apply For Job</a>
+    </div>
+
+    <h2>My Applications</h2>
+    <table>
+        <tr>
+            <th>Job</th>
+            <th>Automated Resume Match</th>
+            <th>Status</th>
+            <th>Date</th>
+        </tr>
+        {% for application in applications %}
+        <tr>
+            <td>{{ application.job }}</td>
+            <td>
+                {% if application.score is not none %}
+                <span class="score-badge">{{ application.score }}%</span>
+                {% else %}
+                <span class="score-unavailable">Unable to analyze</span>
+                {% endif %}
+            </td>
+            <td>{{ application.status }}</td>
+            <td>{{ application.applied_date }}</td>
+        </tr>
+        {% else %}
+        <tr><td colspan="4" class="empty-state">No applications yet.</td></tr>
+        {% endfor %}
+    </table>
+    <p class="score-note">Automated skills-match estimate based on resume text. Review the resume before making hiring decisions.</p>
+</div>
+</body>
+</html>
