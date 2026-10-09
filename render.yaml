@@ -1,0 +1,32 @@
+services:
+  - type: web
+    name: hr-resume-analyzer
+    runtime: python
+    plan: starter
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app --workers 2 --bind 0.0.0.0:$PORT
+    disk:
+      name: hr-resume-data
+      mountPath: /var/data
+      sizeGB: 1
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DATABASE_PATH
+        value: /var/data/hr_analyzer.db
+      - key: UPLOAD_FOLDER
+        value: /var/data/uploads
+      - key: HR_USERNAME
+        sync: false
+      - key: HR_PASSWORD
+        sync: false
+      - key: SMTP_HOST
+        value: smtp.gmail.com
+      - key: SMTP_PORT
+        value: "587"
+      - key: SMTP_USERNAME
+        sync: false
+      - key: SMTP_PASSWORD
+        sync: false
